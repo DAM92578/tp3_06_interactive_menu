@@ -47,16 +47,19 @@ extern "C" {
 
 /********************** macros ***********************************************/
 
+
+
+
 /********************** typedef **********************************************/
 /* Menu Statechart - State Transition Table */
 /* 	------------------------+-----------------------+-----------------------+-----------------------+------------------------
  * 	| Current               | Event                 |                       | Next                  |                       |
  * 	| State                 | (Parameters)          | [Guard]               | State                 | Actions               |
  * 	|=======================+=======================+=======================+=======================+=======================|
- * 	| ST_MEN_XX_IDLE        | EV_MEN_MEN_ACTIVE     |                       | ST_MEN_XX_ACTIVE      |                       |
+ * 	| ST_MEN_XX_IDLE        | EV_MEN_MAN_IDLE     |                       | ST_MEN_XX_ACTIVE      |                       |
  * 	|                       |                       |                       |                       |                       |
  * 	|-----------------------+-----------------------+-----------------------+-----------------------+-----------------------|
- * 	| ST_MEN_XX_ACTIVE      | EV_MEN_MEN_IDLE       |                       | ST_MEN_XX_IDLE        |                       |
+ * 	| ST_MEN_XX_ACTIVE      | EV_MEN_MAN_IDLE       |                       | ST_MEN_XX_IDLE        |                       |
  * 	|                       |                       |                       |                       |                       |
  * 	------------------------+-----------------------+-----------------------+-----------------------+------------------------
  */
@@ -73,7 +76,24 @@ typedef enum task_menu_ev {EV_MEN_MEN_IDLE,
 
 /* State of Task Menu */
 typedef enum task_menu_st {ST_MEN_XX_IDLE,
-						   ST_MEN_XX_ACTIVE} task_menu_st_t;
+						   ST_MEN_XX_ACTIVE,
+						   ST_MAIN_MENU,
+						   ST_01_MENU,
+						   ST_02_MENU,
+						   ST_03_MENU} task_menu_st_t;
+
+						  /* State of Task Menu */
+
+typedef enum task_menu_1_st { MOTOR_ID_1_MEN_1,
+							  MOTOR_ID_2_MEN_1}task_menu_1_st_t;
+
+typedef enum task_menu_2_st { POWER_MEN_2,
+						      SPEED_MEN_2,
+						      SPIN_MEN_2 }task_menu_2_st_t;
+
+typedef enum task_menu_3_st { POWER_MEN_3,
+							  SPEED_MEN_3,
+							  SPIN_MEN_3 }task_menu_3_st_t;
 
 typedef struct
 {
@@ -83,8 +103,31 @@ typedef struct
 	bool			flag;
 } task_menu_dta_t;
 
+typedef struct
+{
+	uint32_t		sub_menu_1;
+	uint32_t		sub_menu_2;
+	uint32_t		sub_menu_3;
+
+} task_sub_menu_dta_t;
+
+
+
+
+
+typedef struct
+{
+	uint32_t        motor_id;
+	uint32_t        motor_speed;
+	uint32_t		motor_power;
+	uint32_t        motor_spin;
+
+} task_menu_motor_dta_t;
+
+
 /********************** external data declaration ****************************/
-extern task_menu_dta_t task_menu_dta;
+extern task_menu_dta_t        task_menu_dta;
+extern task_menu_motor_dta_t  task_menu_motor_dta;
 
 /********************** external functions declaration ***********************/
 

@@ -2,7 +2,7 @@
 #include "display.h"
 #include "main.h"
 #include <stdbool.h>
-
+#include "task_menu_attribute.h"
 /********************** arm_book Defines *******************************/
 //#include "arm_book_lib.h"
 // Functional states
@@ -102,10 +102,38 @@ static bool initial8BitCommunicationIsCompleted;
 static void displayPinWrite( uint8_t pinName, int value );
 static void displayDataBusWrite( uint8_t dataByte );
 static void displayCodeWrite( bool type, uint8_t dataBus );
+void displayClear();
+void displayMotorDatawrite(task_menu_motor_dta_t  *task_menu_motor_dta, int y);
 
 /********************** internal data definition *****************************/
 /********************** external data declaration ****************************/
 /********************** external functions definition ************************/
+
+void displayMotorDatawrite(task_menu_motor_dta_t  *task_menu_motor_dta, int y){
+ int i;
+ char menu_str[16];
+task_menu_motor_dta_t   *p_task_menu_motor_dta;
+
+p_task_menu_motor_dta = task_menu_motor_dta;
+	   for(i=1;i++;3){
+
+		  snprintf(menu_str, sizeof(menu_str), "%lu",( * (p_task_menu_motor_dta+i ) ));
+	      displayCharPositionWrite(9+i,y);
+	       }
+
+
+}
+
+
+
+
+
+void displayClear(){
+
+	 displayCodeWrite( DISPLAY_RS_INSTRUCTION,
+	                      DISPLAY_IR_CLEAR_DISPLAY );
+
+}
 void displayInit( displayConnection_t connection )
 {
     display.connection = connection;
