@@ -67,11 +67,11 @@
 /********************** internal data declaration ****************************/
 task_menu_dta_t task_menu_dta = {DEL_MEN_XX_MIN, ST_MAIN_MENU, EV_MEN_MEN_IDLE, false};
 
-task_menu_motor_dta_t task_menu_motor_dta_1={0,0,0,0};
+task_menu_motor_dta_t task_menu_motor_dta_1= {0,0,0,0};
 
-task_menu_motor_dta_t task_menu_motor_dta_2={0,0,0,0};
+task_menu_motor_dta_t task_menu_motor_dta_2= {0,0,0,0};
 
-task_sub_menu_dta_t task_sub_menu_dta = {0,0,0};
+task_sub_menu_dta_t task_sub_menu_dta =      {0,0,0};
 
 
 #define MENU_DTA_QTY	(sizeof(task_menu_dta)/sizeof(task_menu_dta_t))
@@ -139,7 +139,8 @@ void task_menu_update(void *parameters)
 
 	bool b_time_update_required = false;
     char menu_str[16];
-
+    char power_st[4];
+    char spin_st[2];
 
 	p_task_sub_menu_dta = &task_sub_menu_dta;
 
@@ -194,55 +195,43 @@ void task_menu_update(void *parameters)
 
 
 
-	            	  	  	  	  displayCharPositionWrite(0,0);
-	            	  	  	  	  displayStringWrite("Motor 1:");
+
+
 	            	  	  	      p_task_menu_motor_dta = & task_menu_motor_dta_1;
-	            	  	  	  snprintf(menu_str, sizeof(menu_str), "%lu",( p_task_menu_motor_dta->motor_power)/1ul);
-	            	  	  	      displayCharPositionWrite(10,0);
-	            	  	  	  	  displayStringWrite(menu_str);
-	            	  	  	  snprintf(menu_str, sizeof(menu_str), "%lu",( p_task_menu_motor_dta->motor_speed)/1ul);
-            	  	  	          displayCharPositionWrite(12,0);
-            	  	  	  	      displayStringWrite(menu_str);
-            	  		  	  snprintf(menu_str, sizeof(menu_str), "%lu",( p_task_menu_motor_dta->motor_spin)/1ul);
-            	  	              displayCharPositionWrite(14,0);
+	             	              if (p_task_menu_motor_dta->motor_power==0){strcpy(power_st,"OFF");}
+	    	            	  		  else{strcpy(power_st,"ON ");}
+	    	            	      if (p_task_menu_motor_dta->motor_spin==0){strcpy(spin_st,"L");}
+	    	            	          else{strcpy(spin_st,"R");}
+
+	            	              displayCharPositionWrite(0,0);
+		            	  	  	  snprintf(menu_str, sizeof(menu_str), "Motor 1:%s %lu %s",power_st, p_task_menu_motor_dta->motor_speed, spin_st);
             	  	              displayStringWrite(menu_str);
 
-
-	            	  	  	  	  displayCharPositionWrite(0, 1);
-	            	  	  	  	  displayStringWrite("Motor 2:");
-	             	  	  	      p_task_menu_motor_dta = & task_menu_motor_dta_2;
-	        	            	  snprintf(menu_str, sizeof(menu_str), "%lu",( p_task_menu_motor_dta->motor_power)/1ul);
-	        	            	  displayCharPositionWrite(10,1);
-	        	            	  displayStringWrite(menu_str);
-	        	            	  snprintf(menu_str, sizeof(menu_str), "%lu",( p_task_menu_motor_dta->motor_speed)/1ul);
-	        	            	  displayCharPositionWrite(12,1);
-	        	            	  displayStringWrite(menu_str);
-	            	  		  	  snprintf(menu_str, sizeof(menu_str), "%lu",( p_task_menu_motor_dta->motor_spin)/1ul);
-	            	  	           displayCharPositionWrite(14,1);
-	            	  	           displayStringWrite(menu_str);
-
-
-
+	            	  	  	      p_task_menu_motor_dta = & task_menu_motor_dta_2;
+	            	              if (p_task_menu_motor_dta->motor_power==0){strcpy(power_st,"OFF");}
+	            	  			      else{strcpy(power_st,"ON ");}
+	            	              if (p_task_menu_motor_dta->motor_spin==0){strcpy(spin_st,"L");}
+	            	                  else{strcpy(spin_st,"R");}
+	            	              displayCharPositionWrite(0,1);
+	            	  	  	      snprintf(menu_str, sizeof(menu_str), "Motor 2:%s %lu %s",power_st, p_task_menu_motor_dta->motor_speed, spin_st);
+            	  	              displayStringWrite(menu_str);
 
 
 	            	  	  	  	  if ((true == p_task_menu_dta->flag) && (EV_MEN_MEN_ACTIVE == p_task_menu_dta->event)){
 	            	  	  	  		  p_task_menu_dta->flag = false;
-	            	  	  	  		  p_task_menu_dta->state = ST_01_MENU;
-	            	  	  	  		  displayClear();}
+	            	  	  	  		  p_task_menu_dta->state = ST_01_MENU;}
 	            	  	  	  	  break;
 
 				case ST_01_MENU:
 					 	 	 	 displayCharPositionWrite(0, 0);
-					 	 	 	 displayStringWrite("Enter/Next/Esc");
+					 	 	 	 displayStringWrite(" Enter/Next/Esc ");
 
 					 	 	 	 if(p_task_sub_menu_dta->sub_menu_1 == MOTOR_ID_1_MEN_1){
 					 	 	 		p_task_menu_motor_dta = & task_menu_motor_dta_1;
 					 	 	 		p_task_menu_motor_dta->motor_id=MOTOR_ID_1_MEN_1+1;
 
 					 	 	 		 displayCharPositionWrite(0,1);
-					 	 	 		 displayStringWrite("Motor");
-						 	 		 snprintf(menu_str, sizeof(menu_str), "%lu",( p_task_menu_motor_dta->motor_id)/1ul);
-								 	         displayCharPositionWrite(6,1);
+						 	 		 snprintf(menu_str, sizeof(menu_str),"Motor: %lu       ",( p_task_menu_motor_dta->motor_id));
 								 	 	     displayStringWrite(menu_str);}
 
 					 	 	 	 if(p_task_sub_menu_dta->sub_menu_1== MOTOR_ID_2_MEN_1){
@@ -250,10 +239,8 @@ void task_menu_update(void *parameters)
 					 	 	 		 p_task_menu_motor_dta->motor_id = MOTOR_ID_2_MEN_1+1;
 
 					 	 	 		 displayCharPositionWrite(0,1);
-					 	 	 		 displayStringWrite("Motor ");
-						 	 		 snprintf(menu_str, sizeof(menu_str), "%lu", (p_task_menu_motor_dta->motor_id)/1ul);
-									 	 	  displayCharPositionWrite(6,1);
-									 	 	  displayStringWrite(menu_str);}
+						 	 		 snprintf(menu_str, sizeof(menu_str),"Motor: %lu       ",( p_task_menu_motor_dta->motor_id));
+								 	 	     displayStringWrite(menu_str);}
 					 	 	 	/*-------------------------------------------------------------------------------------------*/
 					 	 	 	 if ((true == p_task_menu_dta->flag) && (EV_MEN_NEX_ACTIVE == p_task_menu_dta->event)){
 					 	 	 		p_task_sub_menu_dta->sub_menu_1++;}
@@ -263,71 +250,63 @@ void task_menu_update(void *parameters)
 
 								 if ((true == p_task_menu_dta->flag) && (EV_MEN_ENT_ACTIVE == p_task_menu_dta->event)){
 									p_task_menu_dta->flag = false;
-									p_task_menu_dta->state = ST_02_MENU;
-									displayClear();}
+									p_task_menu_dta->state = ST_02_MENU;}
 
 								 if ((true == p_task_menu_dta->flag) && (EV_MEN_ESC_ACTIVE == p_task_menu_dta->event)){
 									p_task_menu_dta->flag = false;
-									p_task_menu_dta->state = ST_MAIN_MENU;
-									displayClear();}
+									p_task_menu_dta->state = ST_MAIN_MENU;}
 								 break;
 
 				     case ST_02_MENU:
 
-							     displayCharPositionWrite(0, 0);
-								 displayStringWrite("Enter/Next/Esc:");
-						 	 		snprintf(menu_str, sizeof(menu_str), "%lu", (p_task_menu_motor_dta->motor_id)/1ul);
-								 	 		displayCharPositionWrite(15, 0);
-								 	 	    displayStringWrite(menu_str);
+							        displayCharPositionWrite(0, 0);
+							        displayStringWrite(" Enter/Next/Esc ");
+							        displayCharPositionWrite(0,1);
 
 								 if(p_task_sub_menu_dta->sub_menu_2 == POWER_MEN_2){
-									 displayCharPositionWrite(0,1);
-									 displayStringWrite("Power");}
-
+									 snprintf(menu_str, sizeof(menu_str), "M%lu   Power    ", (p_task_menu_motor_dta->motor_id));
+									 displayStringWrite(menu_str);}
 
 								 if(p_task_sub_menu_dta->sub_menu_2== SPEED_MEN_2){
-									 displayCharPositionWrite(0,1);
-									 displayStringWrite("Speed");}
+									 snprintf(menu_str, sizeof(menu_str), "M%lu   Speed    ", (p_task_menu_motor_dta->motor_id));
+									 displayStringWrite(menu_str);}
 
 								 if(p_task_sub_menu_dta->sub_menu_2== SPIN_MEN_2){
-									 displayCharPositionWrite(0,1);
-									 displayStringWrite("Spin");}
+									 snprintf(menu_str, sizeof(menu_str), "M%lu    Spin    ", (p_task_menu_motor_dta->motor_id));
+									 displayStringWrite(menu_str);}
                              /*-------------------------------------------------------------------------------------------*/
 								 if ((true == p_task_menu_dta->flag) && (EV_MEN_NEX_ACTIVE == p_task_menu_dta->event)){
-									p_task_sub_menu_dta->sub_menu_2++;
-									displayClear();}
+									p_task_sub_menu_dta->sub_menu_2++;}
 
 								 if (p_task_sub_menu_dta->sub_menu_2> MENU_2_MAX ){
 									p_task_sub_menu_dta->sub_menu_2=0;}
 
 								 if ((true == p_task_menu_dta->flag) && (EV_MEN_ENT_ACTIVE == p_task_menu_dta->event)){
 									p_task_menu_dta->flag = false;
-									p_task_menu_dta->state = ST_03_MENU;
-									displayClear();}
+									p_task_menu_dta->state = ST_03_MENU;}
 
 								 if ((true == p_task_menu_dta->flag) && (EV_MEN_ESC_ACTIVE == p_task_menu_dta->event)){
 									p_task_menu_dta->flag = false;
-									p_task_menu_dta->state = ST_01_MENU;
-									displayClear();}
+									p_task_menu_dta->state = ST_01_MENU;}
 								 break;
 
 
 				     case ST_03_MENU:
 					     	 	 displayCharPositionWrite(0, 0);
-								 displayStringWrite("Enter/Next/Esc:");
-							     displayCharPositionWrite(0, 0);
-								 snprintf(menu_str, sizeof(menu_str), "%lu", (p_task_menu_motor_dta->motor_id)/1ul);
-								 displayCharPositionWrite(15, 0);
+					     	 	displayStringWrite(" Enter/Next/Esc ");
 								 displayStringWrite(menu_str);
+								 displayCharPositionWrite(0, 1);
+
 								 switch (p_task_sub_menu_dta->sub_menu_2)	{
 
 								 	 	 case POWER_MEN_2 :
 								 				if (p_task_sub_menu_dta->sub_menu_3 > MENU_3_POWER_MAX){
 								 	 		 		 p_task_sub_menu_dta->sub_menu_3=0;}
 								 	 		 	p_task_menu_motor_dta->motor_power = p_task_sub_menu_dta->sub_menu_3;
+					             	              if (p_task_menu_motor_dta->motor_power==0){strcpy(power_st,"OFF");}
+					    	            	  		  else{strcpy(power_st,"ON ");}
 
-								 				snprintf(menu_str, sizeof(menu_str), "%lu", (p_task_menu_motor_dta->motor_power)/1ul);
-								 				        displayCharPositionWrite(0, 1);
+								 				snprintf(menu_str, sizeof(menu_str), "M%lu  Power: %s ", (p_task_menu_motor_dta->motor_id), power_st);
 								 				        displayStringWrite(menu_str);
 								 	 	  break;
 
@@ -337,8 +316,7 @@ void task_menu_update(void *parameters)
 													 p_task_sub_menu_dta->sub_menu_3=0;}
 												  p_task_menu_motor_dta->motor_speed= p_task_sub_menu_dta->sub_menu_3;
 
-								 	 		  snprintf(menu_str, sizeof(menu_str), "%lu", (p_task_menu_motor_dta->motor_speed)/1ul);
-												       displayCharPositionWrite(0, 1);
+												  snprintf(menu_str, sizeof(menu_str), "M%lu  Speed: %lu ", (p_task_menu_motor_dta->motor_id), (p_task_menu_motor_dta->motor_speed));
 												       displayStringWrite(menu_str);
 									     break;
 								 	 	 case SPIN_MEN_2 :
@@ -348,32 +326,26 @@ void task_menu_update(void *parameters)
 								 	 		 		 p_task_sub_menu_dta->sub_menu_3=0;}
 								 	 		 	 p_task_menu_motor_dta->motor_spin= p_task_sub_menu_dta->sub_menu_3;
 
-								 	 		 	 snprintf(menu_str, sizeof(menu_str), "%lu", (p_task_menu_motor_dta->motor_spin)/1ul);
-								 	 		 	          displayCharPositionWrite(0, 1);
+								 	 		 	 if (p_task_menu_motor_dta->motor_spin==0){strcpy(spin_st,"L");}
+					    	            	          else{strcpy(spin_st,"R");}
+								 	 		 	snprintf(menu_str, sizeof(menu_str), "M%lu  Spin: %s ", (p_task_menu_motor_dta->motor_id),spin_st);
 								 	 		 	          displayStringWrite(menu_str);
 								 	     break;
 
 					                     default:break;}
 					 /*-------------------------------------------------------------------------------------------*/
 	 	 	 	 	 	 	 if ((true == p_task_menu_dta->flag) && (EV_MEN_NEX_ACTIVE == p_task_menu_dta->event)){
-	 	 	 	 	 	 		p_task_sub_menu_dta->sub_menu_3++;
-	 	 	 	 	 	 		displayClear();}
+	 	 	 	 	 	 		p_task_sub_menu_dta->sub_menu_3++;}
 
 
 							 if ((true == p_task_menu_dta->flag) && (EV_MEN_ESC_ACTIVE == p_task_menu_dta->event)){
 								p_task_menu_dta->flag = false;
-								p_task_menu_dta->state = ST_02_MENU;
-								displayClear();}
+								p_task_menu_dta->state = ST_02_MENU;}
 
 							  if ((true == p_task_menu_dta->flag) && (EV_MEN_ENT_ACTIVE == p_task_menu_dta->event)){
 								  p_task_menu_dta->flag = false;
-								  p_task_menu_dta->state = ST_MAIN_MENU;
-								  displayClear();}
+								  p_task_menu_dta->state = ST_MAIN_MENU;}
 							   break;
-
-
-
-
 				default:break;
 			}
 		}
